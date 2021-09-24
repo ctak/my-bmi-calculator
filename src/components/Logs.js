@@ -11,7 +11,11 @@ function Log({bmi}) {
   )
 }
 
-function Logs({bmis}) {
+function Logs({logs}) {
+  const { loading, data: bmis, error } = logs;
+
+  if (! bmis) return <div>No Data</div>;
+
   return (
     <div className="Logs">
       <h2>7 Day Data</h2>
