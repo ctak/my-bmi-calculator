@@ -25,6 +25,12 @@ function reducer(state, action) {
         data: null,
         error: action.error
       };
+    case 'POST_LOG':
+      return {
+        loading: false,
+        data: action.data,
+        error: null
+      };
     default:
       throw new Error(`No such ation type: ${action.type}`);
   }
@@ -38,7 +44,13 @@ function App() {
     { id: 2, weight: 80, height: 175, date: new Date(2021, 8, 24, 8, 59, 1), },
     { id: 3, weight: 75, height: 175, date: new Date(2021, 8, 24, 9, 0, 1), },
   ]  
-  
+
+  const [state, dispatch] = useReducer(reducer, {
+    loading: false,
+    data: null,
+    error: null
+  });
+
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
 
@@ -46,14 +58,17 @@ function App() {
   const handleHeightChange = h => setHeight(h);
   const handleCalcClick = () => {
     const c = calc(weight, height);
-    alert(c);
+    const bmis = state.data || [];
+    const max = bmis.length === 0 ? 1 : bmis.map(el => el.id).reduce((acc, cur) => Math.max(acc, cur));
+    const data = bmis.concat({
+      id: max + 1,
+      weight: parseInt(weight, 10),
+      height: parseInt(height, 10),
+      date: new Date(),
+    });
+    dispatch({ type: 'POST_LOG', data });
+    localStorage.setItem("BMIS", JSON.stringify(data));
   }
-
-  const [state, dispatch] = useReducer(reducer, {
-    loading: false,
-    data: null,
-    error: null
-  });
 
   function fetchData() {
     const BMIS = 'BMIS';
