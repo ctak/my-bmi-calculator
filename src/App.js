@@ -95,7 +95,7 @@ function App() {
         onHeightChange={handleHeightChange}
         onCalcClick={handleCalcClick}
       />
-      <Chart />
+      <Chart logs={state} />
       <Logs logs={state} />
     </div>
   );
